@@ -5,7 +5,6 @@ void kwadrat()
       ramka.fill(kolor);
       ramka.rect(mouseX, mouseY - 100, wielkosc, wielkosc); 
       ramka.endDraw();
-      image(ramka, 0, 100);
 }
 
 void kolo()
@@ -18,7 +17,6 @@ void kolo()
       ramka.strokeCap(ROUND);
       ramka.line(starapozycjamyszyX, starapozycjamyszyY - wysokoscPaska, mouseX, mouseY - wysokoscPaska); 
       ramka.endDraw();
-      image(ramka, 0, 100);
 }
 
 void spray()
@@ -40,64 +38,101 @@ void spray()
 
 void wypelnienie(int x, int y)
 {
-  ramka.beginDraw();
-  color domyslnykolor = ramka.get(x,y);
-  boolean rysowanie = true;
-  ramka.stroke(kolor);
-  while(ramka.get(x,y-1)!=domyslnykolor)
+  boolean opcje = false;
+  if(!(okno[0].wyswietlanie))
   {
-    y--;
+    opcje = true;
   }
-  while(rysowanie)
+  else if(najechanieIKlik(okno[0].pozycjaX,okno[0].pozycjaY,okno[0].szerokosc,okno[0].wysokosc) == false)
   {
-    if(ramka.get(x+1,y) == domyslnykolor && ramka.get(x+1,y+1) != domyslnykolor)
+    opcje = true;
+  }
+  ramka.noStroke();
+  if(najechanieIKlik(0, 100, ramkaSzerokosc, ramkaWysokosc) && naEkranie == false && opcje == true)
+  {
+    ramka.beginDraw();
+    ramka2.beginDraw();
+    domyslnykolor = ramka.get(x,y);
+    boolean rysowanie = true;
+    ramka.stroke(kolor);
+    if(domyslnykolor != kolor)
     {
-      x++;
-      ramka.set(x,y,kolor);
-    }
-    else if(ramka.get(x+1,y) == domyslnykolor && ramka.get(x+1,y+1) != domyslnykolor || ramka.get(x,y+1) != domyslnykolor)
-    {
-      x++;
-      y++;
-      ramka.set(x,y,kolor);
-    }
-    else if(ramka.get(x+1,y) != domyslnykolor && ramka.get(x+1,y-1) == domyslnykolor)
-    {
-      x++;
-      y--;
-      ramka.set(x,y,kolor);
-    }
-    else 
-    {
-      rysowanie = false;
+      while(ramka.get(x,y+1)==domyslnykolor && y < ramkaWysokosc)
+      {
+        y++;
+      }
+      zaznaczenieX = x;
+      zaznaczenieY = y;
+      szerokoscZaznaczenia = x;
+      wysokoscZaznaczenia = y;
+      while(rysowanie)
+      {
+        if(ramka.get(x+1,y) == domyslnykolor && ramka.get(x+1,y+1) != domyslnykolor && ramka2.get(x+1,y) != kolor)
+        {
+          x++;
+        }
+        else if(ramka.get(x+1,y+1) == domyslnykolor && ramka.get(x,y+1) != domyslnykolor && ramka2.get(x+1,y+1) != kolor)
+        {
+          x++;
+          y++;
+        }
+        else if(ramka.get(x,y+1) == domyslnykolor && ramka.get(x-1,y+1) != domyslnykolor && ramka2.get(x,y+1) != kolor)
+        {
+          y++;
+        }
+        else if(ramka.get(x+1,y-1) == domyslnykolor && ramka.get(x+1,y) != domyslnykolor && ramka2.get(x+1,y-1) != kolor)
+        {
+          x++;
+          y--;
+        }
+        else if(ramka.get(x,y-1) == domyslnykolor && ramka.get(x+1,y-1) != domyslnykolor && ramka2.get(x,y-1) != kolor)
+        {
+          y--;
+        }
+        else if(ramka.get(x-1,y-1) == domyslnykolor && ramka.get(x,y-1) != domyslnykolor && ramka2.get(x-1,y-1) != kolor)
+        {
+          x--;
+          y--;
+        }
+        else if(ramka.get(x-1,y) == domyslnykolor && ramka.get(x-1,y-1) != domyslnykolor && ramka2.get(x-1,y) != kolor)
+        {
+          x--;
+        }
+        else if(ramka.get(x-1,y+1) == domyslnykolor && ramka.get(x-1,y) != domyslnykolor && ramka2.get(x-1,y+1) != kolor)
+        {
+          x--;
+          y++;
+        }
+        else 
+        {
+          rysowanie = false;
+        }
+        if(rysowanie)
+        {
+          ramka2.set(x,y,kolor);
+          if(x < zaznaczenieX)
+          {
+            zaznaczenieX = x;
+          }
+          else if(x > szerokoscZaznaczenia)
+          {
+            szerokoscZaznaczenia = x;
+          }
+          if(y < zaznaczenieY)
+          {
+            zaznaczenieY = y;
+          }
+          else if(y > wysokoscZaznaczenia)
+          {
+            wysokoscZaznaczenia = y;
+          }
+        }
+      }
+      kopiowanie();
     }
   }
  ramka.endDraw();
-}
-
-void wypelnienie1(int x, int y)
-{
-  ramka.beginDraw();
-  color domyslnykolor = ramka.get(x,y);
-  ramka.set(x,y,kolor);
-  if(x-1 >= 0 && ramka.get(x-1,y) == domyslnykolor)
-  {
-    wypelnienie1(x-1,y);
-  }
-  if(y-1 >= 0 && ramka.get(x,y-1) == domyslnykolor)
-  {
-    wypelnienie1(x,y-1);
-  }
-  if(x+1 >= 0 && ramka.get(x+1,y) == domyslnykolor)
-  {
-    wypelnienie1(x+1,y);
-  }
-  if(y+1 >= 0 && ramka.get(x,y+1) == domyslnykolor)
-  {
-    wypelnienie1(x,y+1);
-  }
-  
-  ramka.beginDraw();
+ ramka2.endDraw();
 }
 
 void zaznaczeniePola()
@@ -114,6 +149,8 @@ void zaznaczeniePola()
 }
 void dowolneZaznaczeniePola()
 {
+  if(!najechanieIKlik(okno[0].pozycjaX,okno[0].pozycjaY,okno[0].szerokosc,okno[0].wysokosc))
+  {
     ramka2.beginDraw();
     ramka2.stroke(0,0,255);
     ramka2.strokeWeight(1);
@@ -135,31 +172,38 @@ void dowolneZaznaczeniePola()
       wysokoscZaznaczenia = mouseY;
     }
     ramka2.endDraw();
+  }
 }
 void pobieranieKoloru()
 {
     ramka.beginDraw();
-    czerwony = red(ramka.get(mouseX, mouseY-wysokoscPaska));
-    zielony = green(ramka.get(mouseX, mouseY-wysokoscPaska));
+    czerwony  =  red(ramka.get(mouseX, mouseY-wysokoscPaska));
+    zielony   =green(ramka.get(mouseX, mouseY-wysokoscPaska));
     niebieski = blue(ramka.get(mouseX, mouseY-wysokoscPaska));
     kolor = color(czerwony, zielony, niebieski, przezroczystosc*2.55);
     ramka.endDraw();
 }
 void kopiowanie()
-{  if(!naEkranie)
+{  
+  if(!naEkranie)
   {
     if(krztalt == 5)
     {
       ramka.beginDraw();
       schowek = ramka.get(zaznaczenieX, zaznaczenieY-wysokoscPaska,szerokoscZaznaczenia, wysokoscZaznaczenia);
       ramka.endDraw();
-      ramka2.beginDraw();
-      ramka2.clear();
-      ramka2.endDraw();
+
     }
-    else if (krztalt == 6)
+    else if (krztalt == 6 || krztalt == 3)
     {
-      
+      szerokoscZaznaczenia-=zaznaczenieX;
+      wysokoscZaznaczenia-=zaznaczenieY;
+      if(krztalt == 3)
+      {
+        zaznaczenieY+=wysokoscPaska;
+        szerokoscZaznaczenia+=1;
+        wysokoscZaznaczenia+=1;
+      }
       PGraphics tymczasowyObraz = createGraphics(szerokoscZaznaczenia, wysokoscZaznaczenia);
       ramka.beginDraw();
       ramka2.beginDraw();
@@ -182,7 +226,7 @@ void kopiowanie()
                 }
             }
             else
-            {
+            {tymczasowyObraz.set(x-zaznaczenieX,y-(zaznaczenieY-wysokoscPaska),ramka.get(x,y));
                 if(ramka2.get(x,y+1) == color(0,0,0,0))
                 {
                   boolean czyjest = false;
@@ -193,7 +237,6 @@ void kopiowanie()
                       czyjest = true;
                       nowey = zaznaczenieY-wysokoscPaska + wysokoscZaznaczenia;
                     }
-                    
                   }
                   if(czyjest)
                   {
@@ -203,6 +246,7 @@ void kopiowanie()
                   {
                     kopiowanie = false;
                   }
+                  
                 }
             }
           }
@@ -210,47 +254,61 @@ void kopiowanie()
         tymczasowyObraz.endDraw();
         ramka.endDraw();
         ramka2.endDraw();
-        
-        
-        tymczasowyObraz.beginDraw();
-        schowek = tymczasowyObraz.get(0,0,szerokoscZaznaczenia, wysokoscZaznaczenia);
-        tymczasowyObraz.endDraw();
-        
-        
+        if(krztalt == 3)
+        {
+          tymczasowyObraz.loadPixels();
+          for(int i = 0; i <= tymczasowyObraz.pixels.length-2; i++)
+          {
+            if(tymczasowyObraz.pixels[i] == domyslnykolor)
+            {
+              tymczasowyObraz.pixels[i] = kolor;
+            }
+          }
+          tymczasowyObraz.updatePixels();
+          ramka.beginDraw();
+          ramka.image(tymczasowyObraz, zaznaczenieX, zaznaczenieY-wysokoscPaska);
+          ramka.endDraw();
+          ramka2.clear();
+        }
+        else
+        {
+          tymczasowyObraz.beginDraw();
+          schowek = tymczasowyObraz.get(0,0,szerokoscZaznaczenia, wysokoscZaznaczenia);
+          tymczasowyObraz.endDraw();
+        }
+        szerokoscZaznaczenia+=zaznaczenieX;
+        wysokoscZaznaczenia+=zaznaczenieY;
     }
   }
 }
 void wklejanieRamka2()
 {
     ramka2.beginDraw();
-    ramka2.pushMatrix();
-    ramka2.translate(wklejenieX,wklejenieY-wysokoscPaska);
-    ramka2.rotate(wklejenieObrot);
     if(schowek != null)
     {
-      ramka2.image(schowek,schowek.width/-2,schowek.height/-2,wklejenieSzerokosc,wklejenieWysokosc);
+      ramka2.image(schowek,wklejenieX,wklejenieY-wysokoscPaska,wklejenieSzerokosc,wklejenieWysokosc);
     }
     ramka2.stroke(0,0,255);
     ramka2.strokeWeight(2);
     ramka2.noFill();
     ramka2.rectMode(CORNER);
-    ramka2.rect(schowek.width/-2,schowek.height/-2,wklejenieSzerokosc,wklejenieWysokosc);
+    ramka2.rect(wklejenieX, wklejenieY-wysokoscPaska, wklejenieSzerokosc, wklejenieWysokosc);
     ramka2.strokeWeight(1);
     ramka2.stroke(0);
     ramka2.fill(255);
-    ramka2.rect(wklejenieSzerokosc - schowek.width/2+10, wklejenieWysokosc/-2 , 10, 10);
+    ramka2.rect(wklejenieX + wklejenieSzerokosc+3, wklejenieY-wysokoscPaska + wklejenieWysokosc/2 -5, 10, 10);
     ramka2.rect(wklejenieX + wklejenieSzerokosc+2, wklejenieY-wysokoscPaska + wklejenieWysokosc + 2, 10, 10);
     ramka2.rect(wklejenieX + wklejenieSzerokosc/2 -5, wklejenieY-wysokoscPaska + wklejenieWysokosc + 3, 10, 10);
     ramka2.endDraw();
-    if(przyciskMatrix(schowek.width/-2,schowek.height/-2,wklejenieSzerokosc,wklejenieWysokosc,wklejenieX,wklejenieY,wklejenieObrot))
+    if(przycisk(wklejenieX,wklejenieY,wklejenieSzerokosc, wklejenieWysokosc))
     {
       wklejenieX += (starapozycjamyszyX - mouseX)*-1;
       wklejenieY += (starapozycjamyszyY - mouseY)*-1;
     }
-    else if(przyciskMatrix(wklejenieSzerokosc - schowek.width/2+10, wklejenieWysokosc/-2, 27, 27,wklejenieX,wklejenieY-100,wklejenieObrot))
+    else if(przycisk(wklejenieX + wklejenieSzerokosc+3, wklejenieY + wklejenieWysokosc/2 -5, 27, 27))
     {
       wklejenieSzerokosc += (starapozycjamyszyX - mouseX)*-1;
-    }/*
+    }
     else if(przycisk(wklejenieX + wklejenieSzerokosc+2, wklejenieY + wklejenieWysokosc + 2, 28, 28))
     {
       wklejenieSzerokosc += (starapozycjamyszyX - mouseX)*-1;
@@ -259,8 +317,7 @@ void wklejanieRamka2()
     else if(przycisk(wklejenieX + wklejenieSzerokosc/2 -5, wklejenieY + wklejenieWysokosc + 3, 27, 27))
     {
       wklejenieWysokosc += (starapozycjamyszyY - mouseY)*-1;
-    }*/
-    ramka2.popMatrix();
+    }
 }
 void wycinanie()
 {
@@ -280,7 +337,7 @@ void wycinanie()
     ramka2.clear();
     ramka2.endDraw();
   }
-  else if(krztalt == 6)
+  else if(krztalt == 6 || krztalt == 3)
   {
     ramka.beginDraw();
     ramka2.beginDraw();
@@ -327,7 +384,7 @@ void wycinanie()
         }
         ramka2.clear();
         ramka.endDraw();
-        ramka2.endDraw();
+        ramka2.endDraw();       
   }
     
 }

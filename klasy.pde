@@ -166,53 +166,102 @@ class paletaKolorow extends okno
 }
 class opcje extends okno
 {
+  boolean pole = true;
+  int filtr;
+  float moc = 1;
   opcje(int x,int y,int s,int w, color k, String n)
   {
     super(x,y,s,w,k,n);
   }
   void obraz()
   {
-    textSize(15);
-    fill(230);
-    text("Modulacja kolorów",pozycjaX + 10, pozycjaY + 53);
     noStroke();
+    fill(230);
     for(int i = 0; i <= 3; i++)
     {
-      rect(pozycjaX + 10, pozycjaY + 35 + i*60, 230, 50);
+      rect(pozycjaX + 10, pozycjaY + 40 + i*60, 230, 50);
     }
     fill(0);
     textSize(20);
     textAlign(CENTER);
-    text("Negatyw", pozycjaX + 125, pozycjaY + 65);
-    text("Czarno-biały", pozycjaX + 125, pozycjaY + 125);
-    text("Szarość", pozycjaX + 125, pozycjaY + 185);
-    text("Rozmycie", pozycjaX + 125, pozycjaY + 245);
+    text("Negatyw", pozycjaX + 125, pozycjaY + 70);
+    text("Czarno-biały", pozycjaX + 125, pozycjaY + 130);
+    text("Szarość", pozycjaX + 125, pozycjaY + 190);
+    text("Rozmycie", pozycjaX + 125, pozycjaY + 250);
+    fill(230);
+    rect(pozycjaX + 10, pozycjaY + 280, 30, 30);
+    textAlign(CORNER);
+    if(pole)
+    {
+      stroke(red(kolorTla)-100, green(kolorTla)-100, blue(kolorTla)-100);
+      strokeWeight(3);
+      line(pozycjaX + 12, pozycjaY + 282, pozycjaX + 37, pozycjaY + 307);
+      line(pozycjaX + 12, pozycjaY + 307, pozycjaX + 37, pozycjaY + 282);
+      text("W polu", pozycjaX + 45, pozycjaY + 302);
+    }
+    else
+    {
+      text("Poza polem", pozycjaX + 45, pozycjaY + 302);
+    }
   }
   void transformacjaKoloru()
   {
     if(przycisk(pozycjaX + 10, pozycjaY + 35, 230, 50))
     {
-      ramka.beginDraw();
-      ramka.filter(INVERT);
-      ramka.endDraw();
+      filtr = INVERT;
+      wyborTransformacji();
     }
     if(przycisk(pozycjaX + 10, pozycjaY + 95, 230, 50))
     {
-      ramka.beginDraw();
-      ramka.filter(THRESHOLD);
-      ramka.endDraw();
+      filtr = THRESHOLD;
+      wyborTransformacji();
     }
     if(przycisk(pozycjaX + 10, pozycjaY + 155, 230, 50))
     {
-      ramka.beginDraw();
-      ramka.filter(GRAY);
-      ramka.endDraw();
+      filtr = GRAY;
+      wyborTransformacji();
     }
     if(przycisk(pozycjaX + 10, pozycjaY + 215, 230, 50))
     {
-      ramka.beginDraw();
-      ramka.filter(BLUR, 6);
-      ramka.endDraw();
+      filtr = BLUR;
+      wyborTransformacji();
     }
+    if(przycisk(pozycjaX + 10, pozycjaY + 280, 30, 30))
+    {
+      pole = !pole;
+    }
+  }
+  void wyborTransformacji()
+  {
+    boolean poza = true;
+      if(poczatekLiniiX > ramkaSzerokosc || poczatekLiniiY-wysokoscPaska > ramkaWysokosc || zaznaczenieX > ramkaSzerokosc || zaznaczenieY-wysokoscPaska > ramkaWysokosc || wysokoscZaznaczenia < 2 || szerokoscZaznaczenia < 2)
+      {
+        poza = false;
+      }
+      if(poza && naEkranie == false && krztalt == 5 || krztalt == 6)
+      {
+          if(pole)
+          {
+            kopiowanie();
+            schowek.filter(filtr);
+            ramka.beginDraw();
+            ramka.image(schowek,zaznaczenieX, zaznaczenieY-wysokoscPaska);
+            ramka.endDraw();
+          }
+          else
+          {
+            kopiowanie();
+            ramka.beginDraw();
+            ramka.filter(filtr);
+            ramka.image(schowek,zaznaczenieX, zaznaczenieY-wysokoscPaska);
+            ramka.endDraw();
+          }
+      }
+      else
+      {
+        ramka.beginDraw();
+        ramka.filter(filtr);
+        ramka.endDraw();
+      }
   }
 }

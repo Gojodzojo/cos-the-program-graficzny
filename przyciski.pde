@@ -66,6 +66,10 @@ void przyciskiPasywne()
   }
   else if(przycisk(820, 10, 80, 80))
   {
+    okno[1].wyswietlanie = true;
+  }
+  else if(przycisk(910, 10, 80, 80))
+  {
     okno[0].wyswietlanie = true;
   }
 }
@@ -99,6 +103,18 @@ void przyciskiAktywne()
     przezroczystosc = 1; 
    }
    kolor = color(czerwony, zielony, niebieski, przezroczystosc*2.55);
+  }
+  else if(przycisk(1000, 60, 120, 20))
+  {
+    przyblizenie = (mouseX - 1010)/50.0;
+    if(przyblizenie >=2)
+   {
+    przyblizenie = 2; 
+   }
+   else if (przyblizenie <= 0)
+   {
+    przyblizenie = 0.01; 
+   }
   }
   //najechanie na przycisk zmiany wielkosci
   else if(najechanie(ramkaSzerokosc, ramkaWysokosc/2 + 90, 40, 40) ||
@@ -188,7 +204,7 @@ void wczytanie(File selection)
   }
 }
 
-boolean przycisk(int odX, int odY, int szerokosc, int wysokosc)
+boolean przycisk(int odX, int odY, float szerokosc, float wysokosc)
 {
   boolean stan;
   if(mouseX >= odX && mouseX < odX + szerokosc && mouseY >= odY && mouseY < odY + wysokosc && klik == true)
@@ -215,35 +231,5 @@ boolean najechanieIKlik(int odX, int odY, int szerokosc, int wysokosc)
   {stan = true;}
   else
   {stan = false;}
-  return stan;
-}
-boolean najechanieIKlikMatrix(int odX, int odY, int szerokosc, int wysokosc, int transX, int transY, float rotate)
-{
-  boolean stan;
-  float matrixX = cos(rotate) * (mouseX - transX) - sin(rotate) * (mouseX - transX);
-  float matrixY = sin(rotate) * (mouseY - transY) + cos(rotate) * (mouseY - transY);
-  pushMatrix();
-  translate(transX,transY-100);
-  rotate(rotate);
-  if(matrixX >= odX && matrixX < odX + szerokosc && matrixY  >= odY && matrixY < odY + wysokosc)
-  {stan = true;}
-  else
-  {stan = false;}
-  popMatrix();
-  return stan;
-}
-boolean przyciskMatrix(int odX, int odY, int szerokosc, int wysokosc, int transX, int transY, float rotate)
-{
-  boolean stan;
-  float matrixX = cos(rotate) * (mouseX - transX) - sin(rotate) * (mouseX - transX);
-  float matrixY = sin(rotate) * (mouseY - transY) + cos(rotate) * (mouseY - transY);
-  pushMatrix();
-  rotate(rotate);
-  translate(transX,transY);
-  if(matrixX >= odX && matrixX < odX + szerokosc && matrixY  >= odY && matrixY < odY + wysokosc && klik == true)
-  {stan = true;}
-  else
-  {stan = false;}
-  popMatrix();
   return stan;
 }

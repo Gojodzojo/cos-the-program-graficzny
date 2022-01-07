@@ -1,16 +1,25 @@
 void rysowanie()
 { 
+  boolean opcje = false;
   boolean kolory = false;
   if(!(okno[0].wyswietlanie))
   {
-    kolory = true;
+    opcje = true;
   }
   else if(najechanieIKlik(okno[0].pozycjaX,okno[0].pozycjaY,okno[0].szerokosc,okno[0].wysokosc) == false)
+  {
+    opcje = true;
+  }
+  if(!(okno[1].wyswietlanie))
+  {
+    kolory = true;
+  }
+  else if(najechanieIKlik(okno[1].pozycjaX,okno[1].pozycjaY,okno[1].szerokosc,okno[1].wysokosc) == false)
   {
     kolory = true;
   }
   ramka.noStroke();
-  if(przycisk(0, 100, ramkaSzerokosc, ramkaWysokosc) && naEkranie == false && kolory == true)
+  if(przycisk(0, 100, ramkaSzerokosc, ramkaWysokosc) && naEkranie == false && opcje == true && kolory == true)
   {
     if(krztalt == 1)
     {
@@ -22,7 +31,7 @@ void rysowanie()
     }
     else if(krztalt == 3)
     {
-      wypelnienie(mouseX,mouseY - wysokoscPaska);
+      //wypelnienie(mouseX,mouseY - wysokoscPaska);
     }
     else if(krztalt == 4)
     {
@@ -30,11 +39,17 @@ void rysowanie()
     }
     else if(krztalt == 5)
     {
-      zaznaczeniePola();
+      if(najechanieIKlik(okno[0].pozycjaX,okno[0].pozycjaY,okno[0].szerokosc,okno[0].wysokosc)==false)
+      {
+        zaznaczeniePola();
+      }
     }
     else if(krztalt == 6)
     {
-      dowolneZaznaczeniePola();
+      if(!najechanieIKlik(okno[0].pozycjaX,okno[0].pozycjaY,okno[0].szerokosc,okno[0].wysokosc))
+      {
+        dowolneZaznaczeniePola();
+      }
     }
     else if(krztalt == 7)
     {
@@ -42,28 +57,37 @@ void rysowanie()
     }
   }
 }
-
 void kursor()
 {
   boolean kolory = false;
-  if(!(okno[0].wyswietlanie))
+  boolean opcje = false;
+  if(!(okno[1].wyswietlanie))
   {
     kolory = true;
+  }
+  else if(najechanieIKlik(okno[1].pozycjaX,okno[1].pozycjaY,okno[1].szerokosc,okno[1].wysokosc) == false)
+  {
+    kolory = true;
+  }
+  if(!(okno[0].wyswietlanie))
+  {
+    opcje = true;
   }
   else if(najechanieIKlik(okno[0].pozycjaX,okno[0].pozycjaY,okno[0].szerokosc,okno[0].wysokosc) == false)
   {
-    kolory = true;
+    opcje = true;
   }
-  if(najechanieIKlik(0, wysokoscPaska, ramkaSzerokosc, ramkaWysokosc) && kolory)
+  if(najechanieIKlik(0, wysokoscPaska, ramkaSzerokosc, ramkaWysokosc) && opcje && kolory)
   {
       ramka2.beginDraw();
       ramka2.rectMode(CENTER);
       ramka2.stroke(czerwony,zielony,niebieski);
       ramka2.fill(kolor);
+      ramka2.clear();
       if(krztalt == 1)
       {
         ramka2.rect(mouseX, mouseY - wysokoscPaska, wielkosc, wielkosc);
-        noCursor();
+        //noCursor();
       }
       else if(krztalt == 2)
       {
@@ -120,7 +144,7 @@ void zmianawielkosci()
 }
 void odswierzanieRamki2()
 {
-  if(krztalt == 6 && naEkranie == false)
+  if(krztalt == 6 && naEkranie == false || krztalt == 3 && naEkranie == false)
   {
     odswierzanieRamki2 = false;
   }
@@ -129,7 +153,7 @@ void odswierzanieRamki2()
     odswierzanieRamki2 = false;
   }
   
- if(odswierzanieRamki2)
+ if(odswierzanieRamki2 && !najechanieIKlik(okno[0].pozycjaX,okno[0].pozycjaY,okno[0].szerokosc,okno[0].wysokosc))
  {
   ramka2.beginDraw();
   ramka2.clear();
@@ -142,70 +166,70 @@ void odswierzanieRamki2()
 }
 void interfejs()
 {
- background(50);
- noStroke();
- rectMode(CORNER);
- textAlign(CENTER);
- fill(63,72,204);
- rect(0,0, width, wysokoscPaska);             //pasek narzędzi
+     background(50);
+     noStroke();
+     rectMode(CORNER);
+     textAlign(CENTER);
+     fill(motyw);
+     rect(0,0, width, wysokoscPaska);             //pasek narzędzi
+     
+     fill(255, 0, 0);
+     rect(10, 10, 35, 35);
+     
+     fill(0, 255, 0);
+     rect(55, 10, 35, 35);
+     
+     fill(0, 0, 255);
+     rect(105, 10, 35, 35);
+     
+     fill(255, 255, 255);
+     rect(155, 10, 35, 35);
+     
+     fill(255, 255, 0);
+     rect(10, 55, 35, 35);
+     
+     fill(255, 0, 255);
+     rect(55, 55, 35, 35);
+     
+     fill(0, 255, 255);
+     rect(105, 55, 35, 35);
+     
+     fill(0, 0, 0);
+     rect(155, 55, 35, 35);            //kolory
+     
+     stroke(red(motyw)-100, green(motyw)-100, blue(motyw)-100);
+     line(200, 5, 200, 95);
+     line(390, 5, 390, 95);
+     line(540, 5, 540, 95);
+     noStroke();                                              //linie paska zadań
+     
+     fill(230);
+     for(int i = 0; i <= 4; i++)
+     {
+       rect(550 + 90*i,10, 80, 80);
+     }
+     for(int i = 0; i <= 3; i++)
+     {
+      rect(i*45+210, 10, 35, 35);
+     }                                                      // przyciski narzędzi
+     for(int i = 0; i <= 3; i++)
+     {
+      rect(i*45+210, 55, 35, 35);
+     }
+     textSize(15);
+     fill(0);
+     text("Wyczyść", 590, 50);             // przyciski
+     text("Zapisz",  680, 50);
+     text("Wczytaj", 770, 50);
+     text("Kolory",  860, 50);
+     text("Filtry",  950, 50);
+
+  fill(230);
+  text(ramkaSzerokosc + " X " + ramkaWysokosc + "p", 1060, 50);
  
- fill(255, 0, 0);
- rect(10, 10, 35, 35);
- 
- fill(0, 255, 0);
- rect(55, 10, 35, 35);
- 
- fill(0, 0, 255);
- rect(105, 10, 35, 35);
- 
- fill(255, 255, 255);
- rect(155, 10, 35, 35);
- 
- fill(255, 255, 0);
- rect(10, 55, 35, 35);
- 
- fill(255, 0, 255);
- rect(55, 55, 35, 35);
- 
- fill(0, 255, 255);
- rect(105, 55, 35, 35);
- 
- fill(0, 0, 0);
- rect(155, 55, 35, 35);            //kolory
- 
- stroke(35, 43, 131);
- line(200, 5, 200, 95);
- line(390, 5, 390, 95);
- line(540, 5, 540, 95);
- noStroke();                                              //linie paska zadań
- 
- fill(230);
- for(int i = 0; i <= 3; i++)
- {
-   rect(550 + 90*i,10, 80, 80);
- }
- 
- textSize(15);
- fill(0);
- text("Wyczyść", 590, 50);             // przyciski
- text("Zapisz", 680, 50);
- text("Wczytaj", 770, 50);
- text("Kolory", 860, 50);
- 
- fill(230);
- text(ramkaSzerokosc + " X " + ramkaWysokosc + "p", 970, 50);
- 
- for(int i = 0; i <= 3; i++)
- {
-  rect(i*45+210, 10, 35, 35);
- }                                                      // przyciski narzędzi
- for(int i = 0; i <= 3; i++)
- {
-  rect(i*45+210, 55, 35, 35);
- }
   rectMode(CENTER);
   ellipseMode(CENTER);
-  stroke(35, 43, 131);
+  stroke(red(motyw)-100, green(motyw)-100, blue(motyw)-100);
   strokeWeight(2);
   textSize(13);
   
@@ -219,6 +243,10 @@ void interfejs()
   text(int(100-przezroczystosc)+"%", 520, 75);
   ellipse(100 - przezroczystosc + 400, 70, 10, 10);      //suwak przezroczystości
   
+  line(1010, 70, 1110, 70);
+  //text("Przezroczystość",450,60);
+  //text(int(100-przezroczystosc)+"%", 520, 75);
+  ellipse(przyblizenie*50 + 1010, 70, 10, 10);
   
   noStroke();
   
@@ -227,7 +255,7 @@ void interfejs()
   ellipse(273, 28, 22, 22);
   
   fill(230);
-  rect(ramkaSzerokosc + 10, ramkaWysokosc/2 + wysokoscPaska, 10,10);
-  rect(ramkaSzerokosc/2, ramkaWysokosc + 10 + wysokoscPaska, 10,10);
-  rect(ramkaSzerokosc + 10, ramkaWysokosc + 10 + wysokoscPaska, 10,10);
+  rect(ramkaSzerokosc*przyblizenie + 10, ramkaWysokosc/2*przyblizenie + wysokoscPaska, 10,10);
+  rect(ramkaSzerokosc*przyblizenie/2, ramkaWysokosc*przyblizenie + 10 + wysokoscPaska, 10,10);
+  rect(ramkaSzerokosc*przyblizenie + 10, ramkaWysokosc*przyblizenie + 10 + wysokoscPaska, 10,10);
 }

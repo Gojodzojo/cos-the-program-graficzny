@@ -1,15 +1,28 @@
 int krztalt = 1;
-int wielkosc = 3;
-int kolor = 8;
+int wielkosc = 50;
+float przezroczystosc = 100;
+color kolor = color(0, 0, 0, 255);
+float czerwony = 0;
+float zielony = 0;
+float niebieski = 0;
 boolean klik = false;
-PImage ramka;
+int ramkaSzerokosc = 1920;
+int ramkaWysokosc = 980;
+PGraphics ramka;
 void setup()
 {
- size (960, 540);
+ size (1920, 1080);
+ ramka = createGraphics(ramkaSzerokosc, ramkaWysokosc);
+ ramka.beginDraw();
+ ramka.clear();
+ ramka.endDraw();
+}
+void draw()
+{
  background(50);
  noStroke();
  fill(63,72, 204);
- rect(0,0, width, 100);
+ rect(0,0, width, 100);             //pasek narzędzi
  
  fill(255, 0, 0);
  rect(10, 10, 35, 35);
@@ -33,130 +46,99 @@ void setup()
  rect(105, 55, 35, 35);
  
  fill(0, 0, 0);
- rect(155, 55, 35, 35);
+ rect(155, 55, 35, 35);            //kolory
  
  stroke(35, 43, 131);
  line(200, 5, 200, 95);
  line(390, 5, 390, 95);
- line(670, 5, 670, 95);
- noStroke();
+ line(510, 5, 510, 95);
+ noStroke();                        //linie paska zadań
  
  fill(230, 230, 230);
- /*rect(210, 10, 80, 80);
- rect(300, 10, 80, 80);
- rect(400, 10, 80, 80);
- rect(490, 10, 80, 80);
- rect(580, 10, 80, 80);
- */
- image(loadImage("wyczysc.png"), 680, 10);
+ rect(680, 10, 80, 80);
+ fill(0, 0,0);
+ textSize(15);
+ text("Wyczyść", 690, 50);          // przycisk czyszczenia
  
-
- for(int i = 0; i < 2; i++)
+ 
+ fill(230, 230, 230);
+ for(int i = 0; i <= 1; i++)
  {
   rect(i*90+210, 10, 80, 80);
-  println("o");
- }
-  for(int i = 0; i < 3;  i++)
- {
-  rect(i*90+400, 10, 80, 80);
-  println("o");
- }
-  
+ }                                  // przyciski narzędzi
+ 
   rectMode(CENTER);
   ellipseMode(CENTER);
+  stroke(35, 43, 131);
+  strokeWeight(2);
+  
+  line(400, 30, 500, 30);
+  text("Wielkość: "+int(wielkosc),400,20);
+  ellipse(wielkosc + 400, 30, 10, 10);                //suwak wielkości
+  
+  line(400, 70, 500, 70);
+  text("Przezroczystość: "+int(100-przezroczystosc)+"%",400,60);
+  ellipse(przezroczystosc + 400, 70, 10, 10);    //suwak przezroczystości
+  
+  noStroke();
+  
   fill(0, 0, 0);
   rect(250, 50, 50, 50);
   ellipse(340, 50, 50, 50);
-  rect(440, 50, 3, 3);
-  rect(530, 50, 25, 25);
-  rect(620, 50, 60, 60);
   
-  fill(255, 255, 255);
-  rect(480, 320, 704, 396);
-  fill(0, 0, 0);
-}
-void draw()
-{
-  
-  
-  ramka = get(128, 122, 704, 396);
   rectMode(CORNER);
-  fill(50);
-  rect(0, 100, 960, 440);
-  rectMode(CENTER);
-  image(ramka, 128, 122);
-  switch(kolor)
-  {
-    case 1:
-    fill(255, 0, 0);
-    break;
-    case 2:
-    fill(0, 255, 0);
-    break;
-    case 3:
-    fill(0, 0, 255);
-    break;
-    case 4:
-    fill(255, 255, 255);
-    break;
-    case 5:
-    fill(255, 255, 0);
-    break;
-    case 6:
-    fill(255, 0, 255);
-    break;
-    case 7:
-    fill(0, 255, 255);
-    break;
-    case 8:
-    fill(0, 0, 0);
-    break;
-  }
+  fill(255, 255, 255);
+  rect(0, 100, ramkaSzerokosc, ramkaWysokosc);
+  fill(0, 0, 0);                                //tylna ramka
+
+  image(ramka, 0, 100);
+  ramka.noStroke();
   
-  if(mouseX >= 128 && mouseX < 832 && mouseY >= 122 && mouseY < 518 && klik == true)
+ 
+  ramka.rectMode(CENTER);
+  ramka.ellipseMode(CENTER);
+  
+  if(mouseX >= 0 && mouseX < ramkaSzerokosc && mouseY >= 100 && mouseY < ramkaWysokosc + 100 && klik == true)
   {
     if(krztalt == 1)
     {
-     rect(mouseX, mouseY, wielkosc, wielkosc); 
+      ramka.fill(kolor);
+      ramka.beginDraw();
+      ramka.rect(mouseX, mouseY - 100, wielkosc, wielkosc); 
+      ramka.endDraw();
+      image(ramka, 0, 100);
     }
     else
     {
-     ellipse(mouseX, mouseY, wielkosc, wielkosc); 
+      ramka.fill(kolor);
+      ramka.beginDraw();
+      ramka.ellipse(mouseX, mouseY - 100, wielkosc, wielkosc); 
+      ramka.endDraw();
+      image(ramka, 0, 100);
     }
   }
-  else if(mouseX >= 10 && mouseX < 45 && mouseY >= 10 && mouseY < 45 && klik == true)
+  else if(mouseX >= 10 && mouseX < 45 && mouseY >= 10 && mouseY < 45 && klik == true ||
+  
+  mouseX >= 55 && mouseX < 90 && mouseY >= 10 && mouseY < 45 && klik == true ||
+  
+  mouseX >= 105 && mouseX < 140 && mouseY >= 10 && mouseY < 45 && klik == true ||
+  
+  mouseX >= 155 && mouseX < 190 && mouseY >= 10 && mouseY < 45 && klik == true ||
+ 
+  mouseX >= 10 && mouseX < 45 && mouseY >= 55 && mouseY < 90 && klik == true ||
+  
+  mouseX >= 55 && mouseX < 90 && mouseY >= 55 && mouseY < 90 && klik == true ||
+  
+  mouseX >= 105 && mouseX < 140 && mouseY >= 55 && mouseY < 90 && klik == true ||
+ 
+  mouseX >= 155 && mouseX < 190 && mouseY >= 55 && mouseY < 90 && klik == true)
   {
-    kolor = 1;
+    czerwony = red(get(mouseX, mouseY));
+    zielony = green(get(mouseX, mouseY));
+    niebieski = blue(get(mouseX, mouseY));
+    kolor = color(czerwony, zielony, niebieski, przezroczystosc);
   }
-  else if(mouseX >= 55 && mouseX < 90 && mouseY >= 10 && mouseY < 45 && klik == true)
-  {
-    kolor = 2;
-  }
-  else if(mouseX >= 105 && mouseX < 140 && mouseY >= 10 && mouseY < 45 && klik == true)
-  {
-    kolor = 3;
-  }
-  else if(mouseX >= 155 && mouseX < 190 && mouseY >= 10 && mouseY < 45 && klik == true)
-  {
-    kolor = 4;
-  }
-   
-  else if(mouseX >= 10 && mouseX < 45 && mouseY >= 55 && mouseY < 90 && klik == true)
-  {
-    kolor = 5;
-  }
-  else if(mouseX >= 55 && mouseX < 90 && mouseY >= 55 && mouseY < 90 && klik == true)
-  {
-    kolor = 6;
-  }
-  else if(mouseX >= 105 && mouseX < 140 && mouseY >= 55 && mouseY < 90 && klik == true)
-  {
-    kolor = 7;
-  }
-  else if(mouseX >= 155 && mouseX < 190 && mouseY >= 55 && mouseY < 90 && klik == true)
-  {
-    kolor = 8;
-  }
+  
   else if(mouseX >= 210 && mouseX < 290 && mouseY >= 10 && mouseY < 90 && klik == true)
   {
     krztalt = 1;
@@ -165,26 +147,42 @@ void draw()
   {
     krztalt = 0;
   }
-  else if(mouseX >= 400 && mouseX < 480 && mouseY >= 10 && mouseY < 90 && klik == true)
+  else if(mouseX >= 390 && mouseX < 510 && mouseY >= 20 && mouseY < 40 && klik == true)
   {
-    wielkosc = 3;
+   wielkosc = mouseX - 400;
+   if(wielkosc <= 0)
+   {
+    wielkosc=1; 
+   }
+   else if(wielkosc >= 100)
+   {
+    wielkosc=100; 
+   }
   }
-  else if(mouseX >= 490 && mouseX < 570 && mouseY >= 10 && mouseY < 90 && klik == true)
+  else if(mouseX >= 390 && mouseX < 510 && mouseY >= 60 && mouseY < 80 && klik == true)
   {
-    wielkosc = 25;
-  }
-  else if(mouseX >= 580 && mouseX < 660 && mouseY >= 10 && mouseY < 90 && klik == true)
-  {
-    wielkosc = 50;
+    
+   przezroczystosc = mouseX - 400;
+   if(przezroczystosc >=100)
+   {
+    przezroczystosc = 100; 
+   }
+   else if (przezroczystosc <= 0)
+   {
+    przezroczystosc = 1; 
+   }
+   kolor = color(czerwony, zielony, niebieski, przezroczystosc*2.55);
   }
   else if(mouseX >= 680 && mouseX < 760 && mouseY >= 10 && mouseY < 90 && klik == true)
   {
-    fill(255, 255, 255);
-    rect(480, 320, 704, 396);
-    fill(0, 0, 0);
-   
+    ramka.beginDraw();
+    ramka.clear();
+    ramka.endDraw();
   }
+  rectMode(CORNER);
+  println(przezroczystosc*2.55);
 }
+
 
 
 

@@ -109,7 +109,7 @@ void przyciskiAktywne()
    schowek2 = ramka.get(0,0,ramkaSzerokosc, ramkaWysokosc);
    ramka.endDraw();
   }
-  else if(przycisk(ramkaSzerokosc, ramkaWysokosc/2 + 90, 40, 30) && schowek != null)
+  else if(przycisk(ramkaSzerokosc, ramkaWysokosc/2 + 90, 40, 30) && schowek2 != null)
   {
     ramkaSzerokosc = mouseX-15;
     if(ramkaSzerokosc<=10)
@@ -121,7 +121,7 @@ void przyciskiAktywne()
     ramka.image(schowek2,0,0);
     ramka.endDraw();
   }
-  else if(przycisk(ramkaSzerokosc, ramkaWysokosc + 90, 40, 40) && schowek != null)
+  else if(przycisk(ramkaSzerokosc, ramkaWysokosc + 90, 40, 40) && schowek2 != null)
   {
     ramkaSzerokosc = mouseX-15;
     ramkaWysokosc = mouseY-115;
@@ -138,7 +138,7 @@ void przyciskiAktywne()
     ramka.image(schowek2,0,0);
     ramka.endDraw();
   }
-  else if(przycisk(ramkaSzerokosc/2 - 10, ramkaWysokosc + 90, 30, 40) && schowek != null)
+  else if(przycisk(ramkaSzerokosc/2 - 10, ramkaWysokosc + 90, 30, 40) && schowek2 != null)
   {
     ramkaWysokosc = mouseY-115;
     if(ramkaWysokosc<=10)
@@ -215,5 +215,35 @@ boolean najechanieIKlik(int odX, int odY, int szerokosc, int wysokosc)
   {stan = true;}
   else
   {stan = false;}
+  return stan;
+}
+boolean najechanieIKlikMatrix(int odX, int odY, int szerokosc, int wysokosc, int transX, int transY, float rotate)
+{
+  boolean stan;
+  float matrixX = cos(rotate) * (mouseX - transX) - sin(rotate) * (mouseX - transX);
+  float matrixY = sin(rotate) * (mouseY - transY) + cos(rotate) * (mouseY - transY);
+  pushMatrix();
+  translate(transX,transY-100);
+  rotate(rotate);
+  if(matrixX >= odX && matrixX < odX + szerokosc && matrixY  >= odY && matrixY < odY + wysokosc)
+  {stan = true;}
+  else
+  {stan = false;}
+  popMatrix();
+  return stan;
+}
+boolean przyciskMatrix(int odX, int odY, int szerokosc, int wysokosc, int transX, int transY, float rotate)
+{
+  boolean stan;
+  float matrixX = cos(rotate) * (mouseX - transX) - sin(rotate) * (mouseX - transX);
+  float matrixY = sin(rotate) * (mouseY - transY) + cos(rotate) * (mouseY - transY);
+  pushMatrix();
+  rotate(rotate);
+  translate(transX,transY);
+  if(matrixX >= odX && matrixX < odX + szerokosc && matrixY  >= odY && matrixY < odY + wysokosc && klik == true)
+  {stan = true;}
+  else
+  {stan = false;}
+  popMatrix();
   return stan;
 }

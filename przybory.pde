@@ -40,21 +40,39 @@ void spray()
 
 void wypelnienie(int x, int y)
 {
-  
-  ramka.loadPixels();
-  color domyslnykolor = ramka.pixels[y*ramkaSzerokosc+x];
-  ramka.pixels[y*ramkaSzerokosc+x] = kolor;
-  /*if(ramka.pixels[y*ramkaSzerokosc+x-1] == domyslnykolor && x-1 >= 0)
+  ramka.beginDraw();
+  color domyslnykolor = ramka.get(x,y);
+  boolean rysowanie = true;
+  ramka.stroke(kolor);
+  while(ramka.get(x,y-1)!=domyslnykolor)
   {
-    wypelnienie(x-1,y);
-    
-  }*/
-  if(ramka.pixels[(x+1)+y*ramkaSzerokosc] == domyslnykolor && x+1 >= ramkaSzerokosc)
-  {
-    wypelnienie(x+1,y);
+    y--;
   }
-  ramka.updatePixels();
-  
+  while(rysowanie)
+  {
+    if(ramka.get(x+1,y) == domyslnykolor && ramka.get(x+1,y+1) != domyslnykolor)
+    {
+      x++;
+      ramka.set(x,y,kolor);
+    }
+    else if(ramka.get(x+1,y) == domyslnykolor && ramka.get(x+1,y+1) != domyslnykolor || ramka.get(x,y+1) != domyslnykolor)
+    {
+      x++;
+      y++;
+      ramka.set(x,y,kolor);
+    }
+    else if(ramka.get(x+1,y) != domyslnykolor && ramka.get(x+1,y-1) == domyslnykolor)
+    {
+      x++;
+      y--;
+      ramka.set(x,y,kolor);
+    }
+    else 
+    {
+      rysowanie = false;
+    }
+  }
+ ramka.endDraw();
 }
 
 void wypelnienie1(int x, int y)
@@ -128,7 +146,8 @@ void pobieranieKoloru()
     ramka.endDraw();
 }
 void kopiowanie()
-{
+{  if(!naEkranie)
+  {
     if(krztalt == 5)
     {
       ramka.beginDraw();
@@ -199,35 +218,39 @@ void kopiowanie()
         
         
     }
+  }
 }
 void wklejanieRamka2()
 {
     ramka2.beginDraw();
+    ramka2.pushMatrix();
+    ramka2.translate(wklejenieX,wklejenieY-wysokoscPaska);
+    ramka2.rotate(wklejenieObrot);
     if(schowek != null)
     {
-      ramka2.image(schowek,wklejenieX,wklejenieY-wysokoscPaska,wklejenieSzerokosc,wklejenieWysokosc);
+      ramka2.image(schowek,schowek.width/-2,schowek.height/-2,wklejenieSzerokosc,wklejenieWysokosc);
     }
     ramka2.stroke(0,0,255);
     ramka2.strokeWeight(2);
     ramka2.noFill();
     ramka2.rectMode(CORNER);
-    ramka2.rect(wklejenieX, wklejenieY-wysokoscPaska, wklejenieSzerokosc, wklejenieWysokosc);
+    ramka2.rect(schowek.width/-2,schowek.height/-2,wklejenieSzerokosc,wklejenieWysokosc);
     ramka2.strokeWeight(1);
     ramka2.stroke(0);
     ramka2.fill(255);
-    ramka2.rect(wklejenieX + wklejenieSzerokosc+3, wklejenieY-wysokoscPaska + wklejenieWysokosc/2 -5, 10, 10);
+    ramka2.rect(wklejenieSzerokosc - schowek.width/2+10, wklejenieWysokosc/-2 , 10, 10);
     ramka2.rect(wklejenieX + wklejenieSzerokosc+2, wklejenieY-wysokoscPaska + wklejenieWysokosc + 2, 10, 10);
     ramka2.rect(wklejenieX + wklejenieSzerokosc/2 -5, wklejenieY-wysokoscPaska + wklejenieWysokosc + 3, 10, 10);
     ramka2.endDraw();
-    if(przycisk(wklejenieX,wklejenieY,wklejenieSzerokosc, wklejenieWysokosc))
+    if(przyciskMatrix(schowek.width/-2,schowek.height/-2,wklejenieSzerokosc,wklejenieWysokosc,wklejenieX,wklejenieY,wklejenieObrot))
     {
       wklejenieX += (starapozycjamyszyX - mouseX)*-1;
       wklejenieY += (starapozycjamyszyY - mouseY)*-1;
     }
-    else if(przycisk(wklejenieX + wklejenieSzerokosc+3, wklejenieY + wklejenieWysokosc/2 -5, 27, 27))
+    else if(przyciskMatrix(wklejenieSzerokosc - schowek.width/2+10, wklejenieWysokosc/-2, 27, 27,wklejenieX,wklejenieY-100,wklejenieObrot))
     {
       wklejenieSzerokosc += (starapozycjamyszyX - mouseX)*-1;
-    }
+    }/*
     else if(przycisk(wklejenieX + wklejenieSzerokosc+2, wklejenieY + wklejenieWysokosc + 2, 28, 28))
     {
       wklejenieSzerokosc += (starapozycjamyszyX - mouseX)*-1;
@@ -236,7 +259,8 @@ void wklejanieRamka2()
     else if(przycisk(wklejenieX + wklejenieSzerokosc/2 -5, wklejenieY + wklejenieWysokosc + 3, 27, 27))
     {
       wklejenieWysokosc += (starapozycjamyszyY - mouseY)*-1;
-    }
+    }*/
+    ramka2.popMatrix();
 }
 void wycinanie()
 {

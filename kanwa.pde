@@ -1,7 +1,16 @@
 void rysowanie()
 { 
+  boolean kolory = false;
+  if(!(okno[0].wyswietlanie))
+  {
+    kolory = true;
+  }
+  else if(najechanieIKlik(okno[0].pozycjaX,okno[0].pozycjaY,okno[0].szerokosc,okno[0].wysokosc) == false)
+  {
+    kolory = true;
+  }
   ramka.noStroke();
-  if(przycisk(0, 100, ramkaSzerokosc, ramkaWysokosc) && naEkranie == false && najechanieIKlik(okno[0].pozycjaX,okno[0].pozycjaY,okno[0].szerokosc,okno[0].wysokosc) == false)
+  if(przycisk(0, 100, ramkaSzerokosc, ramkaWysokosc) && naEkranie == false && kolory == true)
   {
     if(krztalt == 1)
     {
@@ -13,7 +22,7 @@ void rysowanie()
     }
     else if(krztalt == 3)
     {
-      wypelnienie1(mouseX,mouseY - wysokoscPaska);
+      wypelnienie(mouseX,mouseY - wysokoscPaska);
     }
     else if(krztalt == 4)
     {
@@ -36,7 +45,16 @@ void rysowanie()
 
 void kursor()
 {
-  if(najechanieIKlik(0, wysokoscPaska, ramkaSzerokosc, ramkaWysokosc) && najechanieIKlik(okno[0].pozycjaX,okno[0].pozycjaY,okno[0].szerokosc,okno[0].wysokosc) == false)
+  boolean kolory = false;
+  if(!(okno[0].wyswietlanie))
+  {
+    kolory = true;
+  }
+  else if(najechanieIKlik(okno[0].pozycjaX,okno[0].pozycjaY,okno[0].szerokosc,okno[0].wysokosc) == false)
+  {
+    kolory = true;
+  }
+  if(najechanieIKlik(0, wysokoscPaska, ramkaSzerokosc, ramkaWysokosc) && kolory)
   {
       ramka2.beginDraw();
       ramka2.rectMode(CENTER);
@@ -161,13 +179,11 @@ void interfejs()
  line(540, 5, 540, 95);
  noStroke();                                              //linie paska zadań
  
- fill(230, 230, 230);
+ fill(230);
  for(int i = 0; i <= 3; i++)
  {
    rect(550 + 90*i,10, 80, 80);
  }
- 
- 
  
  textSize(15);
  fill(0);
@@ -187,7 +203,7 @@ void interfejs()
  {
   rect(i*45+210, 55, 35, 35);
  }
- rectMode(CENTER);
+  rectMode(CENTER);
   ellipseMode(CENTER);
   stroke(35, 43, 131);
   strokeWeight(2);

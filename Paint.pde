@@ -2,6 +2,7 @@ int krztalt = 1;
 int wielkosc = 3;
 int kolor = 8;
 boolean klik = false;
+PImage ramka;
 void setup()
 {
  size (960, 540);
@@ -41,20 +42,25 @@ void setup()
  noStroke();
  
  fill(230, 230, 230);
- rect(210, 10, 80, 80);
+ /*rect(210, 10, 80, 80);
  rect(300, 10, 80, 80);
  rect(400, 10, 80, 80);
  rect(490, 10, 80, 80);
  rect(580, 10, 80, 80);
- fill(255, 255, 255);
- rect(680, 10, 80, 80);
+ */
+ image(loadImage("wyczysc.png"), 680, 10);
  
- /*
- for(int i = 0; i < 3; i = i++)
+
+ for(int i = 0; i < 2; i++)
+ {
+  rect(i*90+210, 10, 80, 80);
+  println("o");
+ }
+  for(int i = 0; i < 3;  i++)
  {
   rect(i*90+400, 10, 80, 80);
+  println("o");
  }
-  */
   
   rectMode(CENTER);
   ellipseMode(CENTER);
@@ -72,18 +78,13 @@ void setup()
 void draw()
 {
   
-  println(mouseX);
-  println(mouseY);
-  println(klik);
   
+  ramka = get(128, 122, 704, 396);
   rectMode(CORNER);
   fill(50);
-  rect(0, 100, 128, 440);
-  rect(832, 100, 128, 440);
-  rect(128, 100, 832, 22);
-  rect(128, 518, 832, 22);
+  rect(0, 100, 960, 440);
   rectMode(CENTER);
-  
+  image(ramka, 128, 122);
   switch(kolor)
   {
     case 1:
